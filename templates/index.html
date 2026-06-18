@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>To Do application</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Geist:wght@500&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#eeeef0",
+                        "outline": "#85746a",
+                        "secondary-container": "#7fd7fe",
+                        "on-primary-container": "#79431a",
+                        "surface-bright": "#f9f9fc",
+                        "on-background": "#1a1c1e",
+                        "on-tertiary-fixed-variant": "#43474b",
+                        "on-secondary": "#ffffff",
+                        "primary": "#895026",
+                        "tertiary": "#5a5f62",
+                        "inverse-primary": "#ffb786",
+                        "on-tertiary-fixed": "#171c1f",
+                        "surface-container-highest": "#e2e2e5",
+                        "on-tertiary": "#ffffff",
+                        "surface": "#f9f9fc",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f0f0f3",
+                        "inverse-surface": "#2f3133",
+                        "secondary": "#006684",
+                        "secondary-fixed-dim": "#79d1f8",
+                        "surface-container-low": "#f3f3f6",
+                        "on-secondary-fixed": "#001f2a",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#dadadc",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#f9f9fc",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#6d3910",
+                        "primary-container": "#ffb380",
+                        "on-secondary-fixed-variant": "#004d64",
+                        "outline-variant": "#d7c2b7",
+                        "primary-fixed-dim": "#ffb786",
+                        "tertiary-fixed-dim": "#c3c7cb",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#4c5155",
+                        "on-primary-fixed": "#311300",
+                        "surface-tint": "#895026",
+                        "surface-container-high": "#e8e8ea",
+                        "on-surface": "#1a1c1e",
+                        "secondary-fixed": "#bee9ff",
+                        "tertiary-fixed": "#dfe3e7",
+                        "on-secondary-container": "#005d79",
+                        "on-surface-variant": "#52443b",
+                        "surface-variant": "#e2e2e5",
+                        "tertiary-container": "#c0c4c8",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#ffdcc7"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "stack-md": "24px",
+                        "container-padding": "32px",
+                        "base": "8px",
+                        "stack-lg": "48px",
+                        "stack-sm": "12px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Geist"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(0, 102, 132, 0.08);
+        }
+
+        .glass-item {
+            background: rgba(255, 255, 255, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.6);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .glass-item:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .strikethrough-anim {
+            position: relative;
+        }
+
+        .strikethrough-anim.completed::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: currentColor;
+            transform-origin: left;
+            animation: strike 0.3s forwards;
+        }
+
+        @keyframes strike {
+            from {
+                transform: scaleX(0);
+            }
+
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        .bg-mesh {
+            background-color: #f9f9fc;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(255, 179, 128, 0.2) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(121, 215, 254, 0.2) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(255, 183, 134, 0.1) 0px, transparent 50%);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body class="bg-mesh min-h-screen font-body-md text-on-surface overflow-hidden flex flex-col">
+    <!-- TopNavBar (Shared Component) -->
+    <nav
+        class="fixed top-0 w-full z-50 flex justify-between items-center px-container-padding py-base max-w-full bg-surface/40 backdrop-blur-3xl border-b border-white/20 shadow-sm shadow-secondary/5">
+        <div
+            class="font-display-lg text-display-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent select-none">
+            To do app
+        </div>
+        <div class="hidden md:flex items-center gap-stack-md">
+            <a class="text-on-surface-variant font-body-md hover:scale-105 hover:bg-white/10 transition-transform duration-300"
+                href="/">Tasks</a>
+        </div>
+        <div class="flex items-center gap-base">
+            <button class="p-2 rounded-full hover:bg-white/20 transition-all">
+                <span class="material-symbols-outlined text-primary">settings</span>
+            </button>
+            <button class="p-1 rounded-full border border-white/40 overflow-hidden w-10 h-10">
+                <img class="w-full h-full object-cover"
+                    data-alt="A clean, professional studio headshot of a creative professional against a soft blurred background, high key lighting, modern aesthetic."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_SzqZ1JwNLkTRMgvKozk0zQUM2OEFLqrfGk_CP6jwhJDZBXGi6zIDMY0HHsansk8fmOM1mECf7Thz9MjRqAGcqKpmpE1urIZKgLWu_4dK4LqKTAa3IFIOzl-Na93T5aZJ_OUQbHYBpjEHlNGOqGlUROps6llQ8TF9e872D02HrMGcdz4kSYxWTsmTidM5TXeIH1z8xm0bzrtYBAKSn_qIYY6k315QUwON5OnmtTWAj_ne_Bo4-5wOHfMpWbdebetIi-cqvv6tIsc" />
+            </button>
+        </div>
+    </nav>
+    <!-- SideNavBar (Shared Component - Hidden on small screens) -->
+    <aside
+        class="hidden md:flex fixed left-0 top-0 h-full flex-col p-stack-md z-40 bg-surface-container-low/60 backdrop-blur-2xl border-r border-white/10 shadow-xl shadow-on-secondary-fixed/10 w-64 pt-32">
+        <div class="mb-stack-lg">
+            <h2 class="font-headline-lg text-headline-lg font-bold text-on-surface">My Day</h2>
+            <p class="text-on-surface-variant text-sm opacity-70">Productivity Flow</p>
+        </div>
+        <div class="flex-1 space-y-2">
+            <button
+                class="w-full flex items-center gap-3 p-3 rounded-xl bg-secondary/10 text-secondary border-r-4 border-secondary font-semibold hover:translate-x-1 transition-transform duration-200">
+                <span class="material-symbols-outlined">list_alt</span>
+                <span>All Tasks</span>
+            </button>
+        </div>
+        <button
+            class="mt-auto mb-stack-md flex items-center justify-center gap-2 py-3 px-6 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-semibold shadow-lg hover:scale-[1.02] transition-transform active:scale-95">
+            <span class="material-symbols-outlined">add</span>
+            New List
+        </button>
+        <div class="pt-stack-md border-t border-white/10">
+            <button
+                class="w-full flex items-center gap-3 p-2 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg">
+                <span class="material-symbols-outlined">archive</span>
+                <span class="text-sm">Archive</span>
+            </button>
+            <button
+                class="w-full flex items-center gap-3 p-2 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg">
+                <span class="material-symbols-outlined">delete</span>
+                <span class="text-sm">Trash</span>
+            </button>
+        </div>
+    </aside>
+    <!-- Main Content -->
+    <main class="flex-1 flex items-center justify-center p-4 pt-24 md:pl-72">
+        <div
+            class="glass-card w-full max-w-2xl min-h-[600px] rounded-[32px] p-stack-md flex flex-col relative overflow-hidden">
+            <!-- Header section with Input -->
+            <header class="mb-stack-md">
+                <div class="flex items-center justify-between mb-6">
+                    <h1 class="font-headline-lg text-headline-lg text-on-surface">Focus List</h1>
+                    <div class="text-label-sm px-3 py-1 rounded-full bg-secondary/10 text-secondary" id="task-counter">0
+                        tasks</div>
+                </div>
+                <div class="relative group">
+                    <input
+                        class="w-full bg-white/10 border-white/20 border-2 rounded-2xl py-4 pl-12 pr-16 text-on-surface placeholder-on-surface-variant/50 focus:ring-0 focus:border-primary/50 focus:bg-white/20 transition-all cubic-bezier(0.2, 0.8, 0.2, 1)"
+                        id="task-input" placeholder="Add a new task..." type="text" />
+                    <span
+                        class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/60">add_task</span>
+                    <button
+                        class="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-gradient-to-br from-primary to-secondary text-white rounded-xl shadow-md hover:scale-105 active:scale-95 transition-all"
+                        id="add-btn">
+                        <span class="material-symbols-outlined">add</span>
+                    </button>
+                </div>
+            </header>
+            <!-- Filter Chips -->
+            <div class="flex gap-2 mb-6 overflow-x-auto pb-2 no-scrollbar">
+                <button
+                    class="filter-chip active flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/60 text-on-surface shadow-sm border border-white/40 whitespace-nowrap transition-all font-medium text-sm"
+                    data-filter="all">
+                    All Tasks
+                </button>
+                <button
+                    class="filter-chip flex items-center gap-2 px-4 py-1.5 rounded-full bg-transparent text-on-surface-variant hover:bg-white/30 whitespace-nowrap transition-all font-medium text-sm"
+                    data-filter="active">
+                    Active
+                </button>
+                <button
+                    class="filter-chip flex items-center gap-2 px-4 py-1.5 rounded-full bg-transparent text-on-surface-variant hover:bg-white/30 whitespace-nowrap transition-all font-medium text-sm"
+                    data-filter="completed">
+                    Completed
+                </button>
+            </div>
+            <!-- Task List Area -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3" id="task-container">
+                <!-- Empty State (Shown by default) -->
+                <div class="flex flex-col items-center justify-center h-full py-12 opacity-40" id="empty-state">
+                    <span class="material-symbols-outlined text-[64px] mb-4">cloud_done</span>
+                    <p class="font-headline-lg text-headline-lg text-center">Your day is clear</p>
+                    <p class="text-body-md text-center">Take a moment to breathe and focus.</p>
+                </div>
+                <!-- Dynamic Items will appear here -->
+            </div>
+            <!-- Footer Info -->
+            <footer class="mt-stack-md flex justify-between items-center text-label-sm text-on-surface-variant/60">
+                <span></span>
+                <span id="completion-rate">0% productivity goal</span>
+            </footer>
+        </div>
+    </main>
+    <!-- Success Feedback Overlay (Hidden) -->
+    <div class="fixed bottom-10 left-1/2 -translate-x-1/2 translate-y-20 glass-card px-6 py-3 rounded-2xl flex items-center gap-3 z-[100] transition-transform duration-500 pointer-events-none"
+        id="toast">
+        <span class="material-symbols-outlined text-secondary">check_circle</span>
+        <span class="text-on-surface font-medium" id="toast-text">Task completed!</span>
+    </div>
+    <script>
+        // Core Logic
+        const taskInput = document.getElementById('task-input');
+        const addBtn = document.getElementById('add-btn');
+        const taskContainer = document.getElementById('task-container');
+        const emptyState = document.getElementById('empty-state');
+        const counterEl = document.getElementById('task-counter');
+        const rateEl = document.getElementById('completion-rate');
+        const filterBtns = document.querySelectorAll('.filter-chip');
+        const toast = document.getElementById('toast');
+        const toastText = document.getElementById('toast-text');
+        let tasks = {{ tasks | tojson }};
+        let currentFilter = 'all';
+
+
+        function showToast(message) {
+            toastText.textContent = message;
+            toast.classList.remove('translate-y-20');
+            toast.classList.add('translate-y-0');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0');
+                toast.classList.add('translate-y-20');
+            }, 3000);
+        }
+
+        function addTask() {
+            const text = taskInput.value.trim();
+            if (!text) return;
+            fetch("/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "title=" + encodeURIComponent(text)
+            }).then(() => location.reload());
+        }
+
+        function toggleTask(id) {
+            window.location.href = "/toggle/" + id;
+        }
+
+        function deleteTask(id) {
+            window.location.href = "/delete/" + id;
+        }
+
+        function updateUI() {
+            const filteredTasks = tasks.filter(t => {
+                if (currentFilter === 'active') return !t.completed;
+                if (currentFilter === 'completed') return t.completed;
+                return true;
+            });
+
+            if (tasks.length === 0) {
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+            } else {
+                emptyState.classList.add('hidden');
+                emptyState.classList.remove('flex');
+            }
+
+            taskContainer.querySelectorAll('.glass-item').forEach(el => el.remove());
+
+            filteredTasks.forEach(task => {
+                const taskEl = document.createElement('div');
+                taskEl.className = `glass-item group flex items-center justify-between p-4 rounded-2xl ${task.completed ? 'opacity-60' : ''}`;
+                taskEl.innerHTML = `
+                    <div class="flex items-center gap-4 flex-1 cursor-pointer" onclick="toggleTask(${task.id})">
+                        <div class="w-6 h-6 rounded-full border-2 border-secondary/40 flex items-center justify-center transition-colors ${task.completed ? 'bg-secondary border-secondary' : 'bg-transparent'}">
+                            ${task.completed ? '<span class="material-symbols-outlined text-[16px] text-white" style="font-variation-settings: \'FILL\' 1;">check</span>' : ''}
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-medium text-on-surface strikethrough-anim ${task.completed ? 'completed text-on-surface-variant' : ''}">${task.title}</span>
+                        </div>
+                    </div>
+                    <button onclick="deleteTask(${task.id})" class="p-2 text-on-surface-variant/0 group-hover:text-error/60 hover:text-error transition-all hover:bg-error/5 rounded-lg">
+                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                    </button>
+                `;
+                taskContainer.appendChild(taskEl);
+            });
+
+            // Counters
+            counterEl.textContent = `${tasks.filter(t => !t.completed).length} tasks remaining`;
+            const percent = tasks.length ? Math.round((tasks.filter(t => t.completed).length / tasks.length) * 100) : 0;
+            rateEl.textContent = `${percent}% of daily focus achieved`;
+        }
+
+        // Event Listeners
+        addBtn.addEventListener('click', addTask);
+        taskInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTask();
+        });
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('active', 'bg-white/60', 'shadow-sm', 'border-white/40');
+                    b.classList.add('bg-transparent', 'text-on-surface-variant');
+                });
+                btn.classList.add('active', 'bg-white/60', 'shadow-sm', 'border-white/40');
+                btn.classList.remove('bg-transparent', 'text-on-surface-variant');
+                currentFilter = btn.dataset.filter;
+                updateUI();
+            });
+        });
+
+        // Initialize
+        updateUI();
+    </script>
+</body>
+
+</html>
